@@ -4,7 +4,7 @@ from .zawarudo import ZaWarudo
 
 
 def main():
-    dt = 1e-2
+    dt = 4e-3
     steps = 4
     world = ZaWarudo()
 
