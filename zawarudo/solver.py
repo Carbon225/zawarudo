@@ -13,9 +13,13 @@ def rk4(t, u, dt):
 
 
 def normalize(x):
-    return x.at[:, 0, :].set(x[:, 0, :] - jnp.mean(x[:, 0, :], axis=0))
+    # return x.at[:, 0, :].set(x[:, 0, :] - jnp.mean(x[:, 0, :], axis=0, keepdims=True))
+    # return x / jnp.linalg.norm(x, axis=1, keepdims=True)
+    return x
 
 
-@jax.jit
-def step(t, u, dt):
-    return normalize(rk4(t, u, dt))
+def step(t, u, dt, n):
+    for _ in range(n):
+        u = normalize(rk4(t, u, dt))
+        t = t + dt
+    return u, t

@@ -18,8 +18,8 @@ class ZaWarudo:
     def __init__(self):
         self._state = jnp.concatenate((
             whoop_planet(0, 0, 0, 0, 3),
-            whoop_planet(100, 2, -20, 0, 1),
-            whoop_planet(-100, 2, 20, 0, 1),
+            whoop_planet(0, 6, -5, 0, 1),
+            whoop_planet(-50, 2, 20, 0, 1),
         ))
 
         print(f'Created {self._state.shape[0]} bodies')
@@ -30,10 +30,11 @@ class ZaWarudo:
 
         self._t = 0.0
 
+        self._step = jax.jit(solver.step, static_argnums=(3,))
+
     @property
     def planets(self):
         return zip(self._state[:, 0, :], self._colors)
 
-    def step(self, dt: float):
-        self._state = solver.step(self._t, self._state, dt)
-        self._t += dt
+    def step(self, dt: float, n: int):
+        self._state, self._t = self._step(self._t, self._state, dt, n)
